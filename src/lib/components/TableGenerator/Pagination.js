@@ -42,12 +42,19 @@ const Pagination = ({
         id="employee-table_paginate"
       >
         <button
+<<<<<<< HEAD
           className="paginate_button previous"
+=======
+          className="paginate_button previous disabled"
+>>>>>>> 1c3de6946e3f35174ca8c64986ed1f60d9423d58
           aria-controls="employee-table"
           tabIndex="-1"
           id="employee-table_previous"
           onClick={previousPage}
+<<<<<<< HEAD
           disabled={currentPage === 1}
+=======
+>>>>>>> 1c3de6946e3f35174ca8c64986ed1f60d9423d58
         >
           Previous
         </button>
@@ -65,6 +72,7 @@ const Pagination = ({
           ))}
         </span>
 
+<<<<<<< HEAD
         <button
           className="paginate_button next"
           aria-controls="employee-table"
@@ -75,6 +83,19 @@ const Pagination = ({
         >
           Next
         </button>
+=======
+        {lastItemOnPage === totalFilteredItems || (
+          <button
+            className="paginate_button next"
+            aria-controls="employee-table"
+            onClick={nextPage}
+            tabIndex="0"
+            id="employee-table_next"
+          >
+            Next
+          </button>
+        )}
+>>>>>>> 1c3de6946e3f35174ca8c64986ed1f60d9423d58
       </div>
     </>
   );
