@@ -9,7 +9,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "URL_OF_YOUR_REPOSITORY"
+    "url": "https://github.com/Thierry-Heinz/hrnet-component-library"
   },
   "dependencies": {
     "@testing-library/jest-dom": "^5.14.1",
