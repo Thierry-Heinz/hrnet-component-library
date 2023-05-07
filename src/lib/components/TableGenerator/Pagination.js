@@ -75,6 +75,18 @@ const Pagination = ({
         >
           Next
         </button>
+
+        {lastItemOnPage === totalFilteredItems || (
+          <button
+            className="paginate_button next"
+            aria-controls="employee-table"
+            onClick={nextPage}
+            tabIndex="0"
+            id="employee-table_next"
+          >
+            Next
+          </button>
+        )}
       </div>
     </>
   );
