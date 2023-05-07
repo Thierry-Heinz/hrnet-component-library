@@ -1,12 +1,41 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Pagination from "./Pagination";
 
 const TableGenerator = ({ data }) => {
   console.log(data);
   const [columns] = useState(data.columns);
   const [initialData] = useState(data.nodes);
   const [dataBuffer, setDataBuffer] = useState(data.nodes);
-  const [tableLength, setTableLength] = useState(10);
+  const [tableLength, setTableLength] = useState(25);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [filtered, setFiltered] = useState(false);
 
+  /** Pagination funcs */
+  const indexOfLastItem = currentPage * tableLength;
+  const indexOfFirstItem = indexOfLastItem - tableLength;
+  const currentItems = dataBuffer.slice(indexOfFirstItem, indexOfLastItem);
+
+  const paginate = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const previousPage = () => {
+    if (currentPage !== 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const nextPage = () => {
+    if (currentPage !== Math.ceil(initialData.length / tableLength)) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const handleSelectLength = (e) => {
+    setTableLength(e.target.value);
+  };
+
+  /** Filtering table func */
   const filterTable = (objectsArray, value) => {
     return objectsArray.filter((node) => {
       for (const key in node) {
@@ -27,6 +56,9 @@ const TableGenerator = ({ data }) => {
 
     if (inputVal.length === 0) {
       setDataBuffer(initialData);
+      setFiltered(false);
+    } else {
+      setFiltered(true);
     }
   };
 
@@ -35,7 +67,12 @@ const TableGenerator = ({ data }) => {
       <div id="employeeTable_length" className="dataTables_length">
         <label htmlFor="employeeTable_selectLength">
           Show
-          <select name="employeeTable_length" id="employeeTable_selectLength">
+          <select
+            onChange={handleSelectLength}
+            name="employeeTable_length"
+            id="employeeTable_selectLength"
+            value={tableLength}
+          >
             <option value="10">10</option>
             <option value="25">25</option>
             <option value="50">50</option>
@@ -73,7 +110,7 @@ const TableGenerator = ({ data }) => {
         </thead>
         <tbody>
           {dataBuffer.length ? (
-            dataBuffer.map((node, index) => (
+            currentItems.map((node, index) => (
               <tr className="row" key={index} id={index}>
                 {Object.keys(node).map((key, i) => (
                   <th key={`${index}-${i}`} id={key}>
@@ -89,56 +126,16 @@ const TableGenerator = ({ data }) => {
           )}
         </tbody>
       </table>
-      <div
-        className="dataTables_info"
-        id="employee-table_info"
-        role="status"
-        aria-live="polite"
-      >
-        Showing 1 to 10 of 12 entries
-      </div>
-
-      <div
-        className="dataTables_paginate paging_simple_numbers"
-        id="employee-table_paginate"
-      >
-        <a
-          className="paginate_button previous disabled"
-          aria-controls="employee-table"
-          data-dt-idx="0"
-          tabIndex="-1"
-          id="employee-table_previous"
-        >
-          Previous
-        </a>
-        <span>
-          <a
-            className="paginate_button current"
-            aria-controls="employee-table"
-            data-dt-idx="1"
-            tabIndex="0"
-          >
-            1
-          </a>
-          <a
-            className="paginate_button "
-            aria-controls="employee-table"
-            data-dt-idx="2"
-            tabIndex="0"
-          >
-            2
-          </a>
-        </span>
-        <a
-          className="paginate_button next"
-          aria-controls="employee-table"
-          data-dt-idx="3"
-          tabIndex="0"
-          id="employee-table_next"
-        >
-          Next
-        </a>
-      </div>
+      <Pagination
+        itemsPerPage={tableLength}
+        totalFilteredItems={dataBuffer.length}
+        totalItems={initialData.length}
+        paginate={paginate}
+        previousPage={previousPage}
+        nextPage={nextPage}
+        currentPage={currentPage}
+        filtered={filtered}
+      />
     </div>
   );
 };
