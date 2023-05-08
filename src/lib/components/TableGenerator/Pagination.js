@@ -13,8 +13,6 @@ const Pagination = ({
     pageNumbers.push(i);
   }
 
-  console.log(currentPage);
-
   const firstItemOnPage =
     currentPage === 1 ? 1 : (currentPage - 1) * itemsPerPage + 1;
   const lastItemOnPage =
@@ -75,18 +73,6 @@ const Pagination = ({
         >
           Next
         </button>
-
-        {lastItemOnPage === totalFilteredItems || (
-          <button
-            className="paginate_button next"
-            aria-controls="employee-table"
-            onClick={nextPage}
-            tabIndex="0"
-            id="employee-table_next"
-          >
-            Next
-          </button>
-        )}
       </div>
     </>
   );

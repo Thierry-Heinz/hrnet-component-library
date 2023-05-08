@@ -48,7 +48,7 @@ const App = () => {
   };
 
   return (
-    <div style={{ width: 640, margin: "15px auto" }}>
+    <div style={{ width: 1200, margin: "15px auto" }}>
       <h1>Hello React</h1>
       <TableGenerator data={tableNodes} />
     </div>

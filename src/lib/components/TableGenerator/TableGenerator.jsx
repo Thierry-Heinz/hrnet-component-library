@@ -1,30 +1,41 @@
 import { useEffect, useState } from "react";
 import Pagination from "./Pagination";
+import sortAsc from "./images/sort_asc.png";
+import sortDesc from "./images/sort_desc.png";
+import sortBoth from "./images/sort_both.png";
 
 const TableGenerator = ({ data }) => {
-  console.log(data);
   const [columns] = useState(data.columns);
+
   const [initialData] = useState(data.nodes);
   const [dataBuffer, setDataBuffer] = useState(data.nodes);
+
   const [tableLength, setTableLength] = useState(25);
   const [currentPage, setCurrentPage] = useState(1);
+  const [currentItems, setCurrentItems] = useState([]);
+
   const [filtered, setFiltered] = useState(false);
+  const [sortedColumn, setSortedColumn] = useState();
+  const [sortDirection, setSortDirection] = useState("DESC");
 
   /** Pagination funcs */
-  const indexOfLastItem = currentPage * tableLength;
-  const indexOfFirstItem = indexOfLastItem - tableLength;
-  const currentItems = dataBuffer.slice(indexOfFirstItem, indexOfLastItem);
+
+  /** Pagination funcs */
+  useEffect(() => {
+    const indexOfLastItem = currentPage * tableLength;
+    const indexOfFirstItem = indexOfLastItem - tableLength;
+    const currentItems = dataBuffer.slice(indexOfFirstItem, indexOfLastItem);
+    setCurrentItems(currentItems);
+  }, [dataBuffer, currentPage, tableLength]);
 
   const paginate = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
-
   const previousPage = () => {
     if (currentPage !== 1) {
       setCurrentPage(currentPage - 1);
     }
   };
-
   const nextPage = () => {
     if (currentPage !== Math.ceil(initialData.length / tableLength)) {
       setCurrentPage(currentPage + 1);
@@ -43,15 +54,14 @@ const TableGenerator = ({ data }) => {
           return node;
         }
       }
+      return false;
     });
   };
 
   const handleFilterInput = (e) => {
-    console.log(e.target.value);
     const inputVal = e.target.value;
     const results = filterTable(initialData, inputVal);
     initialData.filter((data) => data.firstName === inputVal);
-    console.log(results);
     setDataBuffer(results);
 
     if (inputVal.length === 0) {
@@ -60,6 +70,29 @@ const TableGenerator = ({ data }) => {
     } else {
       setFiltered(true);
     }
+  };
+
+  /** Sort by columns funcs */
+  const handleSortColumn = (key) => {
+    const sortedCurrentItems = currentItems.sort((a, b) =>
+      // return a[key] < b[key] ? -1 : a[key] > b[key] ? 1 : 0;
+      a[key].localeCompare(b[key], "en", {
+        numeric: "true",
+        sensitivity: "base",
+      })
+    );
+    if (sortedColumn === key) {
+      if (sortDirection === "DESC") {
+        setSortDirection("ASC");
+        sortedCurrentItems.reverse();
+      } else {
+        setSortDirection("DESC");
+      }
+    } else {
+      setSortDirection("DESC");
+    }
+    setCurrentItems(sortedCurrentItems);
+    setSortedColumn(key);
   };
 
   return (
@@ -102,8 +135,23 @@ const TableGenerator = ({ data }) => {
         <thead>
           <tr className="row">
             {columns.map((column, i) => (
-              <th key={`${column.key}-${i}`} id={column.key}>
+              <th
+                onClick={() => handleSortColumn(column.key)}
+                key={`${column.key}-${i}`}
+                id={column.key}
+              >
                 {column.label}
+
+                <img
+                  src={
+                    column.key === sortedColumn
+                      ? sortDirection === "DESC"
+                        ? sortDesc
+                        : sortAsc
+                      : sortBoth
+                  }
+                  alt=""
+                />
               </th>
             ))}
           </tr>
