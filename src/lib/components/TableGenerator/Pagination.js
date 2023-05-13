@@ -50,10 +50,12 @@ const Pagination = ({
           Previous
         </button>
         <span>
-          {pageNumbers.map((number) => (
+          {pageNumbers.map((number, i) => (
             <button
               key={number}
-              className="paginate_button current"
+              className={`paginate_button ${
+                i + 1 === currentPage ? "current" : ""
+              }`}
               aria-controls="employee-table"
               tabIndex="0"
               onClick={() => paginate(number)}

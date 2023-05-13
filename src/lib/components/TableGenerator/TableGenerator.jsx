@@ -176,6 +176,8 @@ const TableGenerator = ({ data }) => {
       </table>
       <Pagination
         itemsPerPage={tableLength}
+        cd
+        ht
         totalFilteredItems={dataBuffer.length}
         totalItems={initialData.length}
         paginate={paginate}
